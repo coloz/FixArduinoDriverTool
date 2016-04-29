@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:FixDriver"
         x:Class="FixDriver.MainWindow"
         mc:Ignorable="d"
-        Title="OpenJumper Fix Driver" Height="400" Width="300" ShowTitleBar="False" ResizeMode="NoResize">
+        Title="OpenJumper Fix Driver" Height="550" Width="330" ShowTitleBar="False" ResizeMode="NoResize">
     <Control.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -18,7 +18,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="70"/>
-            <RowDefinition Height="184"/>
+            <RowDefinition Height="150"/>
             <RowDefinition />
             <RowDefinition Height="30"/>
             <RowDefinition Height="50"/>
@@ -34,7 +34,7 @@
             <Image HorizontalAlignment="Left" Height="30" Margin="10,10,0,0" VerticalAlignment="Top" Width="200" Source="pic/openjumper-logo-white.png"/>
             <Label Content="Fix Arduino Driver" Canvas.Left="32" Canvas.Top="40" Foreground="White" FontSize="20"/>
         </Canvas>
-        <Label Content="v0.1 by 奈何col" Canvas.Left="195" Canvas.Top="443" Grid.Row="5" Grid.Column="2"/>
+        <Label x:Name="aboutInfo" Content="v0.2 by 奈何col"  Grid.Row="5" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" MouseDown="aboutInfo_MouseDown"/>
         <Label Content="click the button to fix your Arduino drivers" Canvas.Left="195" Canvas.Top="443" Grid.Row="3" Grid.ColumnSpan="3" HorizontalAlignment="Center"/>
 
         <Button x:Name="UploadButton" Width="50"
@@ -48,7 +48,10 @@
                 </Rectangle.OpacityMask>
             </Rectangle>
         </Button>
-        <!--<WebBrowser x:Name="webad" Grid.ColumnSpan="3" Grid.Row="1" Grid.RowSpan="1" Width="300" HorizontalAlignment="Center" Height="180" VerticalAlignment="Top" Margin="-1,-1,0,0" />-->
+        <Image x:Name="image1" Grid.Row="1" VerticalAlignment="Top" Grid.ColumnSpan="3"/>
+        <Image x:Name="image2" Grid.Row="2" VerticalAlignment="Top" Grid.ColumnSpan="3"/>
+        <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Grid.ColumnSpan="3" Height="371" Width="304" Grid.RowSpan="2"><Run Text="使用本软件请先阅读以下须知："/><LineBreak/><Run/><LineBreak/><Run Text="1.本程序仅在几台电脑上做了简单测试，目前只能修复"/><Run Text="部分"/><Run Text="驱动不能安装的问题，且只支持win7、win8/8.1系统；"/><LineBreak/><Run/><LineBreak/><Run Text="2.本程序需要管理员权限，并且会改写系统驱动文件夹权限"/><Run Text="，"/><Run Text="请确保你下载源安全可靠；"/><LineBreak/><Run/><LineBreak/><Run Text="3.本程序仅供大家研究学习，本人不对使用本程序造成的后果负责；"/><LineBreak/><Run/><LineBreak/><Run Text="4.程序完全开源，自行获取，本人不对源码做解释，如果你确实"/><Run Text="想问"/><Run Text="问题，本人也提供高额的有偿服务；"/><LineBreak/><Run/><LineBreak/><Run Text="5.如果本程序帮到了你，希望你以后也能到社区帮助他人；"/><LineBreak/><Run/><LineBreak/><Run Text="6.点击右下角本人名字，可以看看广告以示对我的支持。"/></TextBlock>
+        <!--<WebBrowser x:Name="webad1" Grid.ColumnSpan="3" Grid.Row="1" Margin="-2,0,0,0" />-->
 
     </Grid>
 </Controls:MetroWindow>

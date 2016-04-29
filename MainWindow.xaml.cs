@@ -40,16 +40,15 @@ namespace FixDriver
             {
                 folder2 = "win8";
             }
-            //webad.Navigate("http://clz.me/ad/ad1.html");
+            //webad1.Navigate("http://clz.me/ad/ad1.html");
+            //webad2.Navigate("http://clz.me/ad/ad2.html");
         }
 
-        //string sourcePath;
-        //string targetPath = System.Environment.SystemDirectory + "\\drivers\\usbser.sys";
         private void CopyFile()
         {
             string sourcePath, sourcePath2;
-            string targetPath = System.Environment.SystemDirectory + "\\drivers\\usbser.sys";
-            string targetPath2 = System.Environment.SystemDirectory + "\\DriverStore\\FileRepository\\" + FindFolder(@"C:\windows\inf\setupapi.dev.log");
+            string targetPath = Environment.SystemDirectory + "\\drivers\\usbser.sys";
+            string targetPath2 = Environment.SystemDirectory + "\\DriverStore\\FileRepository\\" + FindFolder(@"C:\windows\inf\setupapi.dev.log");
             if (!File.Exists(targetPath))
             {
                 sourcePath = ".\\drivers\\"+ folder2+"\\"+ folder1 +"\\usbser.sys";
@@ -66,22 +65,15 @@ namespace FixDriver
 
             if (!Directory.Exists(targetPath2))
             {
-                AddDirectorySecurity(targetPath2, Environment.UserName, FileSystemRights.FullControl, AccessControlType.Allow);
+                AddDirectorySecurity(Environment.SystemDirectory + "\\DriverStore\\FileRepository\\", Environment.UserName, FileSystemRights.FullControl, AccessControlType.Allow);
                 Directory.CreateDirectory(targetPath2);
+                sourcePath2 = ".\\drivers\\" + folder2 + "\\" + folder1;
+                foreach (string file in Directory.GetFiles(sourcePath2))
+                {
+                    File.Copy(file, targetPath2 + "\\" + System.IO.Path.GetFileName(file), true);
+                }
             }
-            sourcePath2= ".\\drivers\\" + folder2 + "\\" + folder1;
-            //if (Is64)
-            //{
-            //    sourcePath2 = ".\\drivers\\amd64";
-            //}
-            //else
-            //{
-            //    sourcePath2 = ".\\drivers\\x86";
-            //}
-            foreach (string file in Directory.GetFiles(sourcePath2))
-            {
-                File.Copy(file, targetPath2 +"\\"+ System.IO.Path.GetFileName(file), true);
-            }
+
         }
 
         private void StartService()
@@ -98,19 +90,39 @@ namespace FixDriver
             string[] text = System.IO.File.ReadAllLines(path);
             int i = text.Length, pos = 0;
             string FolderName;
-            string compare = "mdmcpq.inf_";
-            for (int j = 0; j < i; j++)
+            string compare1 = "mdmcpq.inf_";
+            string compare2 = "neutral";
+            for (int j = i - 1; j >= 0; j--)
             {
-                if (text[j].Contains(compare))
+                if (text[j].Contains(compare1))
                 {
                     pos = j;
+                    break;
                 }
             }
-            int fore = text[pos].IndexOf(compare);
+            int fore = text[pos].IndexOf(compare1);
             if (Environment.Is64BitOperatingSystem)
-                FolderName = text[pos].Substring(fore, 33);
+            {
+                if (text[pos].Contains(compare2))
+                {
+                    FolderName = text[pos].Substring(fore, 41);
+                }
+                else
+                {
+                    FolderName = text[pos].Substring(fore, 33);
+                }
+            }
             else
-                FolderName = text[pos].Substring(fore, 39);
+            {
+                if (text[pos].Contains(compare2))
+                {
+                    FolderName = text[pos].Substring(fore, 39);
+                }
+                else
+                {
+                    FolderName = text[pos].Substring(fore, 31);
+                }
+            }
             return FolderName;
         }
 
@@ -119,17 +131,20 @@ namespace FixDriver
             try
             {
                 CopyFile();
-                StartService();
+                if (folder2 == "win8")
+                {
+                    StartService();
+                }
                 this.ShowMessageAsync("Done", "Try to install arduino driver again.");
             }
             catch (Exception ex)
             {
                 this.ShowMessageAsync("Error", ex.Message);
             }
-            
+            //this.ShowMessageAsync("Done", "Try to install arduino driver again.");
+
+
         }
-
-
 
         // Adds an ACL entry on the specified file for the specified account.
         public static void AddDirectorySecurity(string FileName, string Account, FileSystemRights Rights, AccessControlType ControlType)
@@ -138,13 +153,15 @@ namespace FixDriver
             DirectorySecurity dSecurity = dInfo.GetAccessControl();
 
             // Add the FileSystemAccessRule to the security settings. 
-            dSecurity.AddAccessRule(new FileSystemAccessRule(Account,
-                                                            Rights,
-                                                            ControlType));
+            dSecurity.AddAccessRule(new FileSystemAccessRule(Account,Rights,ControlType));
 
             // Set the new access settings.
             dInfo.SetAccessControl(dSecurity);
+        }
 
+        private void aboutInfo_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            System.Diagnostics.Process.Start("http://clz.me/");
         }
 
         //private void SetupDriver()
